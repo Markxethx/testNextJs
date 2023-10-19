@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+const plugin = require('tailwindcss/plugin')
+
 module.exports = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -14,5 +17,27 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addUtilities, matchUtilities, theme }) {
+      // add default utilies for border-spacing
+      addUtilities({
+        '.border-spacing-2': {
+          'border-spacing': '0.5rem',
+        },
+        '.border-spacing-4': {
+          'border-spacing': '1rem',
+        },
+      })
+
+      // add dynamic match for arbitrary values, like border-spacing-[50px]
+      matchUtilities(
+        {
+          'border-spacing': (value) => ({
+            'border-spacing': value,
+          }),
+        },
+        { values: theme('borderSpacing') }
+      )
+    }),
+  ],
 }
